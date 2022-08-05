@@ -41,12 +41,18 @@ const apiSources = [
     {team:"washington-commanders", link:"https://www.commanders.com/rss/news"}
 ];
 
-app.get('/', (req, res) => {
-    res.send("THIS APP IS WORKING");
+app.get("/", (req, res) => {
+    res.send(`
+    
+    <h2>To Use This API</h2>
+    <p>ROOT.com/news/{team-name}</p>
+    <p>example: Packers news -> ROOT.com/news/green-bay-packers</p>
+    
+    `);
 })
 
 //Loop through each team and create separate api sources example: /news/${team} 
-/*
+
 apiSources.forEach((item, index) => {
 
     const articles = [];
@@ -80,6 +86,6 @@ apiSources.forEach((item, index) => {
     })
     
 });
-*/
+
 
 app.listen(process.env.PORT || PORT, () => console.log(`server running on port ${PORT}`));
