@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "This api scrapes nfl websites and stores relevent information in an API serving up JSON",
   "main": "api.js",
-  "scripts": {
-    "start": "api.js"
-  },
   "author": "Boulder Beeman",
   "license": "ISC",
   "dependencies": {
