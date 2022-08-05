@@ -4,7 +4,7 @@
   "description": "This api scrapes nfl websites and stores relevent information in an API serving up JSON",
   "main": "api.js",
   "scripts": {
-    "start": "nodemon api.js"
+    "start": "node api.js"
   },
   "author": "Boulder Beeman",
   "license": "ISC",
