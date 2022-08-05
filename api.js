@@ -42,7 +42,7 @@ const apiSources = [
 ];
 
 app.get('/', (req, res) => {
-    app.send("THIS APP IS WORKING");
+    res.send("THIS APP IS WORKING");
 })
 
 //Loop through each team and create separate api sources example: /news/${team} 
@@ -82,4 +82,4 @@ apiSources.forEach((item, index) => {
 });
 */
 
-//app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`server running on port ${PORT}`));
