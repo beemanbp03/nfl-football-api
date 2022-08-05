@@ -47,9 +47,7 @@ const apiSources = [
 //Loop through each team and create separate api sources example: /news/${team} 
 
 apiSources.forEach((item, index) => {
-    console.log(item.team + "\n");
 
-    
     const articles = [];
     app.get(`/news/${item.team}`, (req, res) => {
         axios.get(`${item.link}`)
@@ -83,4 +81,4 @@ apiSources.forEach((item, index) => {
 });
 
 
-app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+//app.listen(PORT, () => console.log(`server running on port ${PORT}`));
