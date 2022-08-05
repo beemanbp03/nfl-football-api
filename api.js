@@ -5,9 +5,6 @@ const cheerio = require('cheerio');
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.json('Welcome to the NFL team news api');
-});
 
 const apiSources = [
     {team:"arizona-cardinals", link:"https://www.azcardinals.com/rss/news"},
