@@ -41,8 +41,12 @@ const apiSources = [
     {team:"washington-commanders", link:"https://www.commanders.com/rss/news"}
 ];
 
-//Loop through each team and create separate api sources example: /news/${team} 
+app.get('/', (req, res) => {
+    app.send("THIS APP IS WORKING");
+})
 
+//Loop through each team and create separate api sources example: /news/${team} 
+/*
 apiSources.forEach((item, index) => {
 
     const articles = [];
@@ -76,6 +80,6 @@ apiSources.forEach((item, index) => {
     })
     
 });
-
+*/
 
 //app.listen(PORT, () => console.log(`server running on port ${PORT}`));
