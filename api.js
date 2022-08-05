@@ -41,12 +41,32 @@ const apiSources = [
     {team:"washington-commanders", link:"https://www.commanders.com/rss/news"}
 ];
 
+const outputTeamNamesHTML = () => {
+   let sectionContainer = document.getElementById("section");
+   apiSources.forEach((item, index) => {
+      let teamName = document.createElement("p");
+      teamName.innerHTML = item.team;
+
+      sectionContainer.append(teamName);
+   })
+}
+
 app.get("/", (req, res) => {
     res.send(`
     
     <h2>To Use This API</h2>
-    <p>ROOT.com/news/{team-name}</p>
-    <p>example: Packers news -> ROOT.com/news/green-bay-packers</p>
+    <p>nfl-football-api.herokuapp.com/news/{team-name}</p>
+    <br />
+
+    <section id="section">
+    <h3>Team Name Examples</h3>
+    <ol>
+        <li>arizona-cardinals</li>
+        <li>baltimore-ravens</li>
+        <li>green-bay-packers</li>
+        <li>san-francisco-49ers</li>
+    </ol>
+    </section>
     
     `);
 })
