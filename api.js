@@ -41,21 +41,84 @@ const apiSources = [
     {team:"washington-commanders", link:"https://www.commanders.com/rss/news"}
 ];
 
-const outputTeamNamesHTML = () => {
-   let sectionContainer = document.getElementById("section");
-   apiSources.forEach((item, index) => {
-      let teamName = document.createElement("p");
-      teamName.innerHTML = item.team;
+//GET all nfl news from every website on server startup, then retrieve the news
+//again every 6 hours
+const allNflArticles = [];
+apiSources.forEach(async (item, index) => {
+    await axios.get(`${item.link}`)
+    .then((response) => {
+        const html = response.data;
+        const $ = cheerio.load(html, {
+            xmlMode: true
+        });
 
-      sectionContainer.append(teamName);
-   })
-}
+        $('item').each((i, elem) => {
+            const title = $(elem).children('title').text();
+            const url = $(elem).children('link').text();
+            const pubDate = $(elem).children('pubDate').text();
+            const thumbnail = $(elem).children('enclosure').attr('url');
+            const author = $(elem).children('creator').text();
+            allNflArticles.push({
+                title,
+                author,
+                url,
+                pubDate,
+                thumbnail
+            });
+        console.log( i + " article added to allNflArticles array");
+        });
 
+    })
+    .catch((err) => {
+    console.log(err);
+    });
+    console.log("END OF GET ALL NFL NEWS FOR " + item.team);
+});
+
+setInterval(() => {
+    allNflArticles.length = 0;
+    apiSources.forEach(async (item, index) => {
+        await axios.get(`${item.link}`)
+        .then((response) => {
+            const html = response.data;
+            const $ = cheerio.load(html, {
+                xmlMode: true
+            });
+    
+            $('item').each((i, elem) => {
+                const title = $(elem).children('title').text();
+                const url = $(elem).children('link').text();
+                const pubDate = $(elem).children('pubDate').text();
+                const thumbnail = $(elem).children('enclosure').attr('url');
+                const author = $(elem).children('creator').text();
+                allNflArticles.push({
+                    title,
+                    author,
+                    url,
+                    pubDate,
+                    thumbnail
+                });
+            //console.log( i + " article added to allNflArticles array");
+            });
+    
+        })
+        .catch((err) => {
+        console.log(err);
+        });
+        console.log("END OF GET ALL NFL NEWS FOR " + item.team);
+    });
+    console.log("All NFL Articles in array: " + allNflArticles.length);
+}, 1000 * 60 * 60 * 6);
+
+
+
+//HOME page for api service
 app.get("/", (req, res) => {
     res.send(`
     
     <h2>To Use This API</h2>
-    <p>nfl-football-api.herokuapp.com/news/{team-name}</p>
+    <p>nfl-football-api.herokuapp.com/news/{team-name} <span style="color: red;">*team-specific news*</span></p>
+    <p>nfl-football-api.herokuapp.com/news <span style="color: red;">*all nfl news from every team*</span></p>
     <br />
 
     <section id="section">
@@ -69,10 +132,14 @@ app.get("/", (req, res) => {
     </section>
     
     `);
-})
+});
+
+//Endpoint for all nfl news example: /news
+app.get(`/news`, (req, res) => {
+    res.json(allNflArticles);
+});
 
 //Loop through each team and create separate api sources example: /news/${team} 
-
 apiSources.forEach((item, index) => {
 
     const articles = [];
@@ -89,12 +156,14 @@ apiSources.forEach((item, index) => {
                 const url = $(elem).children('link').text();
                 const pubDate = $(elem).children('pubDate').text();
                 const thumbnail = $(elem).children('enclosure').attr('url');
+                const author = $(elem).children('creator').text();
                 articles.push({
                     title,
+                    author,
                     url,
                     pubDate,
                     thumbnail
-                })
+                });
             });
             res.json(articles);
 
