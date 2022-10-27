@@ -136,7 +136,18 @@ app.get("/", (req, res) => {
 
 //Endpoint for all nfl news example: /news
 app.get(`/news`, (req, res) => {
-    res.json(allNflArticles);
+    //Loop through all nfl articles, convert the pubDate into a Date() object
+    for (let i = 0; i < allNflArticles.length - 1; i++) {
+        let date = new Date(allNflArticles[i].pubDate);
+        allNflArticles[i].pubDate = date;
+    }
+
+    //Then sort the array of articles by date descending before sending it to res.json
+    const sortedArticlesDesc = allNflArticles.sort(
+        (objA, objB) => Number(objB.pubDate) - Number(objA.pubDate)
+    );
+
+    res.json(sortedArticlesDesc);
 });
 
 //Loop through each team and create separate api sources example: /news/${team} 
