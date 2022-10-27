@@ -138,14 +138,24 @@ app.get("/", (req, res) => {
 app.get(`/news`, (req, res) => {
     //Loop through all nfl articles, convert the pubDate into a Date() object
     for (let i = 0; i < allNflArticles.length - 1; i++) {
-        let date = new Date(allNflArticles[i].pubDate);
-        allNflArticles[i].pubDate = date;
+        let articleDate = new Date(allNflArticles[i].pubDate);
+        allNflArticles[i].pubDate = articleDate;
     }
 
     //Then sort the array of articles by date descending before sending it to res.json
     const sortedArticlesDesc = allNflArticles.sort(
         (objA, objB) => Number(objB.pubDate) - Number(objA.pubDate)
     );
+
+    //Loop through all nfl articles, convert the pubDate into a readable date
+    for (let i = 0; i < allNflArticles.length - 1; i++) {
+        let dateString = allNflArticles[i].pubDate.toDateString();
+        let hour = allNflArticles[i].pubDate.getHours();
+        let minute = String(allNflArticles[i].pubDate.getUTCMinutes()).padStart(2, "0");
+        let articleDate = dateString + " " + hour + ":" + minute;
+        
+        allNflArticles[i].pubDate = articleDate;
+    }
 
     res.json(sortedArticlesDesc);
 });
