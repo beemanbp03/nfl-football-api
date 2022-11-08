@@ -115,7 +115,8 @@ setInterval(() => {
 //GET division news on server startup, then retrieve the news again every 6 hours
 const divisionArticles = [];
 apiSources.forEach((item, index) => {
-    var division = {division: item.division, articles:[]}
+    console.log(item.division);
+    var divisionArray = {division: item.division, articles:[]}
     item.teams.forEach(async (team, index) => {
         await axios.get(`${team.link}`)
         .then((response) => {
@@ -130,7 +131,7 @@ apiSources.forEach((item, index) => {
                 const pubDate = $(elem).children('pubDate').text();
                 const thumbnail = $(elem).children('enclosure').attr('url');
                 const author = $(elem).children('creator').text();
-                division.articles.push({
+                divisionArray.articles.push({
                     title,
                     author,
                     url,
@@ -139,33 +140,33 @@ apiSources.forEach((item, index) => {
                 });
             });
             //Loop through all nfl divisionArticles, convert the pubDate into a Date() object
-            for (let i = 0; i < division.articles.length - 1; i++) {
-                let articleDate = new Date(division.articles[i].pubDate);
-                division.articles[i].pubDate = articleDate;
+            for (let i = 0; i < divisionArray.articles.length - 1; i++) {
+                let articleDate = new Date(divisionArray.articles[i].pubDate);
+                divisionArray.articles[i].pubDate = articleDate;
             }
 
             //Sort the team's array of divisionArticles by date descending before sending it to res.json
-            const sorteddivisionArticlesDesc = division.articles.sort(
+            const sorteddivisionArticlesDesc = divisionArray.articles.sort(
                 (objA, objB) => Number(objB.pubDate) - Number(objA.pubDate)
             );
 
             //Loop through all teams' divisionArticles, convert the pubDate into a readable date
-            for (let i = 0; i < division.articles.length - 1; i++) {
-                let dateString = division.articles[i].pubDate.toDateString();
-                let hour = division.articles[i].pubDate.getHours();
-                let minute = String(division.articles[i].pubDate.getUTCMinutes()).padStart(2, "0");
+            for (let i = 0; i < divisionArray.articles.length - 1; i++) {
+                let dateString = divisionArray.articles[i].pubDate.toDateString();
+                let hour = divisionArray.articles[i].pubDate.getHours();
+                let minute = String(divisionArray.articles[i].pubDate.getUTCMinutes()).padStart(2, "0");
                 let articleDate = dateString + " " + hour + ":" + minute;
         
-                division.articles[i].pubDate = articleDate;
+                divisionArray.articles[i].pubDate = articleDate;
             }
-
-        divisionArticles.push(division);
         })
         .catch((err) => {
             console.log(err);
         })
     });
+    divisionArticles.push(divisionArray);
 });
+
 setInterval(() => {
     divisionArticles.length = 0;
     var division = {division: item.division, articles:[]}
@@ -211,13 +212,12 @@ setInterval(() => {
         
                 division.articles[i].pubDate = articleDate;
             }
-
-        divisionArticles.push(division);
         })
         .catch((err) => {
             console.log(err);
         })
     });
+    divisionArticles.push(division);
 }, 1000 * 60 * 60 * 6);
 /*****************************************************************************/
 
@@ -276,11 +276,13 @@ app.get(`/news`, (req, res) => {
 });
 
 //DIVISION specific endpoints example: /news/${division}
-apiSources.forEach((item, index) => {
+divisionArticles.forEach((item, index) => {
     app.get(`/news/${item.division}`, (req, res) => {
-        res.json(divisionArticles[index].articles);
+        res.send(item.articles);
     });
 });
+
+
 
 //TEAM specific endpoints -> example: /news/${division}/${team}
 apiSources.forEach((item, index) => {
