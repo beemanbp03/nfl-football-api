@@ -163,8 +163,9 @@ app.get(`/news`, (req, res) => {
 //Loop through each team and create separate api sources example: /news/${team} 
 apiSources.forEach((item, index) => {
 
-    const articles = [];
+    var articles = [];
     app.get(`/news/${item.team}`, (req, res) => {
+        articles.length = 0;
         axios.get(`${item.link}`)
         .then((response) => {
             const html = response.data;
