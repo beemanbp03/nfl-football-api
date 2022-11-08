@@ -186,6 +186,28 @@ apiSources.forEach((item, index) => {
                     thumbnail
                 });
             });
+
+            //Loop through all nfl articles, convert the pubDate into a Date() object
+            for (let i = 0; i < articles.length - 1; i++) {
+                let articleDate = new Date(articles[i].pubDate);
+                articles[i].pubDate = articleDate;
+            }
+
+            //Sort the team's array of articles by date descending before sending it to res.json
+            const sortedArticlesDesc = articles.sort(
+                (objA, objB) => Number(objB.pubDate) - Number(objA.pubDate)
+            );
+
+            //Loop through all teams' articles, convert the pubDate into a readable date
+            for (let i = 0; i < articles.length - 1; i++) {
+                let dateString = articles[i].pubDate.toDateString();
+                let hour = articles[i].pubDate.getHours();
+                let minute = String(articles[i].pubDate.getUTCMinutes()).padStart(2, "0");
+                let articleDate = dateString + " " + hour + ":" + minute;
+        
+                articles[i].pubDate = articleDate;
+            }
+
             res.json(articles);
 
         })
