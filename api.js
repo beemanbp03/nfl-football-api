@@ -4,45 +4,48 @@ const axios = require('axios').default;
 const cheerio = require('cheerio');
 const app = express();
 
-//Sources for NFL teams
+//Sources for NFL team news
 const apiSources = [
     {division:"afc", teams:[
-        {name:"baltimore-ravens", link:"https://www.baltimoreravens.com/rss/news"},
-        {name:"buffalo-bills", link:"https://www.buffalobills.com/rss/news"},
-        {name:"cincinnati-bengals", link:"https://www.bengals.com/rss/news"},
-        {name:"cleveland-browns", link:"https://www.clevelandbrowns.com/rss/news"},
-        {name:"denver-broncos", link:"https://www.denverbroncos.com/rss/news"},
-        {name:"houston-texans", link:"https://www.houstontexans.com/rss/news"},
-        {name:"indianapolis-colts", link:"https://www.colts.com/rss/news"},
-        {name:"jacksonville-jaguars", link:"https://www.jaguars.com/rss/news"},
-        {name:"kansas-city-chiefs", link:"https://www.chiefs.com/rss/news"},
-        {name:"las-vegas-raiders", link:"https://www.raiders.com/rss/news"},
-        {name:"los-angeles-chargers", link:"https://www.chargers.com/rss/news"},
-        {name:"miami-dolphins", link:"https://www.miamidolphins.com/rss/news"},
-        {name:"new-england-patriots", link:"https://www.patriots.com/rss/news"},
-        {name:"new-york-jets", link:"https://www.newyorkjets.com/rss/news"},
-        {name:"pittsburgh-steelers", link:"https://www.steelers.com/rss/news"},
-        {name:"tennessee-titans", link:"https://www.tennesseetitans.com/rss/news"}
+        {name:"baltimore-ravens", link:"https://www.baltimoreravens.com/rss/news", abb:"bal"},
+        {name:"buffalo-bills", link:"https://www.buffalobills.com/rss/news", abb:"buf"},
+        {name:"cincinnati-bengals", link:"https://www.bengals.com/rss/news", abb:"cin"},
+        {name:"cleveland-browns", link:"https://www.clevelandbrowns.com/rss/news", abb:"cle"},
+        {name:"denver-broncos", link:"https://www.denverbroncos.com/rss/news", abb:"den"},
+        {name:"houston-texans", link:"https://www.houstontexans.com/rss/news", abb:"hou"},
+        {name:"indianapolis-colts", link:"https://www.colts.com/rss/news", abb:"ind"},
+        {name:"jacksonville-jaguars", link:"https://www.jaguars.com/rss/news", abb:"jax"},
+        {name:"kansas-city-chiefs", link:"https://www.chiefs.com/rss/news", abb:"kc"},
+        {name:"las-vegas-raiders", link:"https://www.raiders.com/rss/news", abb:"lv"},
+        {name:"los-angeles-chargers", link:"https://www.chargers.com/rss/news", abb:"lac"},
+        {name:"miami-dolphins", link:"https://www.miamidolphins.com/rss/news", abb:"mia"},
+        {name:"new-england-patriots", link:"https://www.patriots.com/rss/news", abb:"ne"},
+        {name:"new-york-jets", link:"https://www.newyorkjets.com/rss/news", abb:"nyj"},
+        {name:"pittsburgh-steelers", link:"https://www.steelers.com/rss/news", abb:"pit"},
+        {name:"tennessee-titans", link:"https://www.tennesseetitans.com/rss/news", abb:"ten"}
     ]},
     {division:"nfc", teams:[
-        {name:"arizona-cardinals", link:"https://www.azcardinals.com/rss/news"},
-        {name:"atlanta-falcons", link:"https://www.atlantafalcons.com/rss/news"},
-        {name:"carolina-panthers", link:"https://www.panthers.com/rss/news"},
-        {name:"chicago-bears", link:"https://www.chicagobears.com/rss/news"},
-        {name:"dallas-cowboys", link:"https://www.dallascowboys.com/rss/news"},
-        {name:"detroit-lions", link:"https://www.detroitlions.com/rss/news"},
-        {name:"green-bay-packers", link:"https://www.packers.com/rss/news"},
-        {name:"los-angeles-rams", link:"https://www.therams.com/rss/news"},
-        {name:"minnesota-vikings", link:"https://www.vikings.com/rss/news"},
-        {name:"new-orleans-saints", link:"https://www.neworleanssaints.com/rss/news"},
-        {name:"new-york-giants", link:"https://www.giants.com/rss/news"},
-        {name:"philadelphia-eagles", link:"https://www.philadelphiaeagles.com/rss/news"},
-        {name:"san-francisco-49ers", link:"https://www.49ers.com/rss/news"},
-        {name:"seattle-seahawks", link:"https://www.seahawks.com/rss/news"},
-        {name:"tampa-bay-buccaneers", link:"https://www.buccaneers.com/rss/news"},
-        {name:"washington-commanders", link:"https://www.commanders.com/rss/news"}
+        {name:"arizona-cardinals", link:"https://www.azcardinals.com/rss/news", abb:"ari"},
+        {name:"atlanta-falcons", link:"https://www.atlantafalcons.com/rss/news", abb:"atl"},
+        {name:"carolina-panthers", link:"https://www.panthers.com/rss/news", abb:"car"},
+        {name:"chicago-bears", link:"https://www.chicagobears.com/rss/news", abb:"chi"},
+        {name:"dallas-cowboys", link:"https://www.dallascowboys.com/rss/news", abb:"dal"},
+        {name:"detroit-lions", link:"https://www.detroitlions.com/rss/news", abb:"det"},
+        {name:"green-bay-packers", link:"https://www.packers.com/rss/news", abb:"gb"},
+        {name:"los-angeles-rams", link:"https://www.therams.com/rss/news", abb:"lar"},
+        {name:"minnesota-vikings", link:"https://www.vikings.com/rss/news", abb:"min"},
+        {name:"new-orleans-saints", link:"https://www.neworleanssaints.com/rss/news", abb:"no"},
+        {name:"new-york-giants", link:"https://www.giants.com/rss/news", abb:"nyg"},
+        {name:"philadelphia-eagles", link:"https://www.philadelphiaeagles.com/rss/news", abb:"phi"},
+        {name:"san-francisco-49ers", link:"https://www.49ers.com/rss/news", abb:"sf"},
+        {name:"seattle-seahawks", link:"https://www.seahawks.com/rss/news", abb:"sea"},
+        {name:"tampa-bay-buccaneers", link:"https://www.buccaneers.com/rss/news", abb:"tb"},
+        {name:"washington-commanders", link:"https://www.commanders.com/rss/news", abb:"wsh"}
     ]}
 ];
+
+//Sources for NFL team schedules
+
 
 //******************* SERVER STARTUP / INTERVAL CALLS ***********************/
 //GET ALL NFL news from every website on server startup, then retrieve the news
@@ -223,8 +226,14 @@ setInterval(() => {
     });
     divisionArticles.push(division);
 }, 1000 * 60 * 60 * 6);
+
+
 /*****************************************************************************/
 
+
+
+
+/************************* NFL NEWS ENDPOINTS ***************************/
 
 //HOME page for api service
 app.get("/", (req, res) => {
@@ -286,8 +295,6 @@ divisionArticles.forEach((item, index) => {
     });
 });
 
-
-
 //TEAM specific endpoints -> example: /news/${division}/${team}
 apiSources.forEach((item, index) => {
 
@@ -348,6 +355,52 @@ apiSources.forEach((item, index) => {
         });
     })
 });
+
+/***********************************************************************/
+
+
+/*********************** UPCOMING GAMES ENDPOINTS **********************/
+
+apiSources.forEach((item, index) => {
+    item.teams.forEach((team, index) => {
+        app.get(`/schedule/${team.name}`, (req, res) => {
+            var seasonSchedule = [];
+            // TRY http://www.espn.com/nfl/schedulegrid INSTEAD
+            axios.get(`https://espn.com/nfl/team/schedule/_/name/${team.abb}`).then((response) => {
+                const html = response.data;
+                const $ = cheerio.load(html, null, false);
+                $('tr').each((i, elem) => {
+                    //console.log($(elem).find('span').text() + "\n");
+                    //console.log("WEEK: " + $(elem).find('td:nth-child(1)').text() + "\n");
+                    //console.log("TIME: " + $(elem).find('td:nth-child(2)').text() + " " + $(elem).find('td:nth-child(4) span a').text() + "\n");
+                    //console.log("OPPONENT: " + $(elem).find('td:nth-child(3)').text() + "\n");
+                    const time = $(elem).find('td:nth-child(2)').text() + " " + $(elem).find('td:nth-child(4) span a').text();
+                    const week = $(elem).find('td:nth-child(1)').text();
+                    const opponent = $(elem).find('td:nth-child(3)').text();
+                    const gameData = {
+                        week: week,
+                        time: time,
+                        opponent: opponent
+                    };
+                    seasonSchedule.push(gameData);
+                });
+
+
+            //Filter out all non-relevent array elements 
+            seasonSchedule.forEach((item, index) => {
+                const newString = item.week.replace(/\D/g,'');
+                item.week = newString;
+            });  
+            const filteredSeasonSchedule = seasonSchedule.filter(item => item.week.length > 0);
+            
+            //SEND filtered season schedule to endpoint
+            res.json(filteredSeasonSchedule);
+            }).catch((err) => console.error(err));
+        }); 
+    });
+});
+
+/***********************************************************************/
 
 
 app.listen(process.env.PORT || PORT, () => console.log(`server running on port ${PORT}`));
