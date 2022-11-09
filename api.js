@@ -12,9 +12,9 @@ const apiSources = [
         {name:"cincinnati-bengals", link:"https://www.bengals.com/rss/news"},
         {name:"cleveland-browns", link:"https://www.clevelandbrowns.com/rss/news"},
         {name:"denver-broncos", link:"https://www.denverbroncos.com/rss/news"},
-        {team:"houston-texans", link:"https://www.houstontexans.com/rss/news"},
-        {team:"indianapolis-colts", link:"https://www.colts.com/rss/news"},
-        {team:"jacksonville-jaguars", link:"https://www.jaguars.com/rss/news"},
+        {name:"houston-texans", link:"https://www.houstontexans.com/rss/news"},
+        {name:"indianapolis-colts", link:"https://www.colts.com/rss/news"},
+        {name:"jacksonville-jaguars", link:"https://www.jaguars.com/rss/news"},
         {name:"kansas-city-chiefs", link:"https://www.chiefs.com/rss/news"},
         {name:"las-vegas-raiders", link:"https://www.raiders.com/rss/news"},
         {name:"los-angeles-chargers", link:"https://www.chargers.com/rss/news"},
@@ -22,7 +22,7 @@ const apiSources = [
         {name:"new-england-patriots", link:"https://www.patriots.com/rss/news"},
         {name:"new-york-jets", link:"https://www.newyorkjets.com/rss/news"},
         {name:"pittsburgh-steelers", link:"https://www.steelers.com/rss/news"},
-        {team:"tennessee-titans", link:"https://www.tennesseetitans.com/rss/news"}
+        {name:"tennessee-titans", link:"https://www.tennesseetitans.com/rss/news"}
     ]},
     {division:"nfc", teams:[
         {name:"arizona-cardinals", link:"https://www.azcardinals.com/rss/news"},
@@ -282,7 +282,7 @@ app.get(`/news`, (req, res) => {
 //DIVISION specific endpoints example: /news/${division}
 divisionArticles.forEach((item, index) => {
     app.get(`/news/${item.division}`, (req, res) => {
-        res.send(item.articles);
+        res.json(item.articles);
     });
 });
 
