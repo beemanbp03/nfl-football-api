@@ -44,9 +44,6 @@ const apiSources = [
     ]}
 ];
 
-//Sources for NFL team schedules
-
-
 //******************* SERVER STARTUP / INTERVAL CALLS ***********************/
 //GET ALL NFL news from every website on server startup, then retrieve the news
 //again every 6 hours
@@ -243,6 +240,7 @@ app.get("/", (req, res) => {
     <p>nfl-football-api.herokuapp.com/news <span style="color: red;">*all nfl news from every team*</span></p>
     <p>nfl-football-api.herokuapp.com/news/{division-name} <span style="color: red;">*division-specific news*</span></p>
     <p>nfl-football-api.herokuapp.com/news/{division-name}/{team-name} <span style="color: red;">*team-specific news*</span></p>
+    <p>nfl-football-api.herokuapp.com/schedule/{team-name} <span style="color: red;">*team-specific season schedule*</span></p>
     <br />
 
     <section id="section">
@@ -250,6 +248,7 @@ app.get("/", (req, res) => {
     <ol>
         <li>/news/afc/new-england-patriots --> team specific call</li>
         <li>/news/nfc --> division specific call</li>
+        <li>/schedule/atlanta-falcons --> team specific season schedule</li>
     </ol>
     <h3>Team Name Examples</h3>
     <ol>

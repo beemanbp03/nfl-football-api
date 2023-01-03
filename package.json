@@ -4,14 +4,17 @@
   "description": "This api scrapes nfl websites and stores relevent information in an API serving up JSON",
   "main": "api.js",
   "scripts": {
-    "start": "nodemon api.js"
+    "start": "nodemon api.js",
+    "test":"mocha test/init.test.js"
   },
   "author": "Boulder Beeman",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "chai": "^4.3.7",
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.1",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.19"
   }
 }
