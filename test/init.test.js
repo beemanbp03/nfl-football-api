@@ -1,4 +1,5 @@
 const chai = require('chai');
+const db = require('../controllers/dbController');
 const assert = chai.assert;
 const expect = chai.expect;
 
@@ -45,16 +46,48 @@ describe('Sum of two numbers', () => {
             return x+y;
         }
 
-        assert.equal(2, sumOfNumbers(1,1), `${x} + ${y} = ${sumOfNumbers(x,y)}`);
+        assert.equal(2, sumOfNumbers(1,1), `${x} + ${y} != ${sumOfNumbers(x,y)}`);
     })
 })
 
 
+
 //DATABASE tests
-describe("")
 
-describe("Insert article object successfully", async () => {
+describe("Connect to the database", () => {
+    beforeEach (async () => {
+        await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
+        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('This Is A Title', 'example.com', '1990-09-01 00:00:00', 'imageurl.png', 'Boulder Beeman');");
+     });
 
+    it("should connect to the database successfully and select all articles", async () => {
+        const query = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
+        console.log(query);
+        assert.equal(1, query.length);
+    })
+})
+
+describe("Insert article object successfully", () => {
+    beforeEach (async () => {
+        await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
+        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('This Is A Title', 'example.com', '1990-09-01 00:00:00', 'imageurl.png', 'Boulder Beeman');");
+     });
+    
+    it ("should insert a new article object into the articles table successfully", async () => {
+        const insertQuery = await db.dbQuery("INSERT INTO `news-punt-db-test`.`articles` (title, url, pubDate, thumbnail, author)"
+        + "VALUES" +
+        "('" + apiFirstRequest[0].title + "',"+
+        "'" + apiFirstRequest[0].url + "',"+
+        "'" + apiFirstRequest[0].pubDate + "',"+
+        "'" + apiFirstRequest[0].thumbnail + "',"+
+        "'" + apiFirstRequest[0].author + "');");
+        
+        const selectQuery = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
+        assert.equal(2, selectQuery.length);
+    })
+    it ("Should insert an array of article objects into the articles table", async () => {
+
+    })
 })
 
 describe('Check Database For Identical Article Titles', async () => {

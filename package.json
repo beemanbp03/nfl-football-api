@@ -5,7 +5,7 @@
   "main": "api.js",
   "scripts": {
     "start": "nodemon api.js",
-    "test":"mocha test/init.test.js"
+    "test": "mocha test/init.test.js"
   },
   "author": "Boulder Beeman",
   "license": "ISC",
@@ -13,8 +13,10 @@
     "axios": "^0.27.2",
     "chai": "^4.3.7",
     "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "mocha": "^10.2.0",
+    "mysql": "^2.18.1",
     "nodemon": "^2.0.19"
   }
 }
