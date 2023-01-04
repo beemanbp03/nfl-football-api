@@ -3,35 +3,42 @@ const db = require('../controllers/dbController');
 const assert = chai.assert;
 const expect = chai.expect;
 
-apiFirstRequest = [
+const apiFirstRequest = [
     {
         title: "Dolphins Lose Again!",
         url: "www.url.com/dolphins-lose-again",
-        pubDate: "12-12-12",
+        pubDate: "1990-09-01 00:00:00",
         thumbnail: "efgh.png",
         author: ""
     },
     {
         title: "The Bears Still Suck",
         url: "www.url.com/the-bears-still-suck",
-        pubDate: "12-12-12",
+        pubDate: "1990-09-01 00:00:00",
         thumbnail: "abcd.png",
+        author: ""
+    },
+    {
+        title: "Rams Are Losing It",
+        url: "www.url.com/rams-are-losing-it",
+        pubDate: "1990-09-01 00:00:00",
+        thumbnail: "asdfe.png",
         author: ""
     }
 ]
 
-apiSecondRequest = [
+const apiSecondRequest = [
     {
         title: "The Bears Still Suck",
         url: "www.url.com",
-        pubDate: "12-12-12",
+        pubDate: "1990-09-01 00:00:00",
         thumbnail: "abcd.png",
         author: ""
     },
     {
         title: "Tom Brady Wants To Play Another Year",
         url: "www.url.com/tom-brady-wants-to-play-another-year",
-        pubDate: "12-12-12",
+        pubDate: "1990-09-01 00:00:00",
         thumbnail: "kdks.png",
         author: ""
     }
@@ -57,7 +64,7 @@ describe('Sum of two numbers', () => {
 describe("Connect to the database", () => {
     beforeEach (async () => {
         await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
-        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('This Is A Title', 'example.com', '1990-09-01 00:00:00', 'imageurl.png', 'Boulder Beeman');");
+        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('Rams Are Losing It', 'www.url.com/rams-are-losing-it', '1990-09-01 00:00:00', 'asdfe.png', '');");
      });
 
     it("should connect to the database successfully and select all articles", async () => {
@@ -70,7 +77,7 @@ describe("Connect to the database", () => {
 describe("Insert article object successfully", () => {
     beforeEach (async () => {
         await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
-        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('This Is A Title', 'example.com', '1990-09-01 00:00:00', 'imageurl.png', 'Boulder Beeman');");
+        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('Rams Are Losing It', 'www.url.com/rams-are-losing-it', '1990-09-01 00:00:00', 'asdfe.png', '');");
      });
     
     it ("should insert a new article object into the articles table successfully", async () => {
@@ -90,6 +97,32 @@ describe("Insert article object successfully", () => {
     })
 })
 
-describe('Check Database For Identical Article Titles', async () => {
+describe('Check Database For Identical Article Titles and insert unique article objects', () => {
+    beforeEach (async () => {
+        await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
+        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('Rams Are Losing It', 'www.url.com/rams-are-losing-it', '1990-09-01 00:00:00', 'asdfe.png', '');");
+     });
 
+     it("should check the database for identical articles and find one identical article", async () => {
+        const selectQuery = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
+        let identicalArticle = [];
+
+        //O(n^2) using this approach NOT EFFICIENT
+        apiFirstRequest.forEach(item => {
+            var title = item.title;
+            selectQuery.forEach(item => {
+                if (title === item.title) {
+                    identicalArticle.push(item);
+                }
+            });
+        });
+
+        assert.equal(1, identicalArticle.length);
+        //console.log("Identical Article: " + JSON.stringify(identicalArticle[0]));
+
+     }) //OPPORTUNITY to use Frequency Algorithm from Udemy course for better efficiency
+
+     it("should insert only articles with unique titles", async () => {
+        
+     })
 });
