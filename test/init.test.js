@@ -103,26 +103,25 @@ describe('Check Database For Identical Article Titles and insert unique article 
         await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('Rams Are Losing It', 'www.url.com/rams-are-losing-it', '1990-09-01 00:00:00', 'asdfe.png', '');");
      });
 
-     it("should check the database for identical articles and find one identical article", async () => {
-        const selectQuery = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
-        let identicalArticle = [];
-
-        //O(n^2) using this approach NOT EFFICIENT
-        apiFirstRequest.forEach(item => {
-            var title = item.title;
-            selectQuery.forEach(item => {
-                if (title === item.title) {
-                    identicalArticle.push(item);
+     it("should check the database for identical articles and find one identical article", () => {
+        var duplicateArticlesCount = 0;
+        var duplicateArticles = [];
+        //Loop through array of articles that were scraped and find duplicates
+        apiFirstRequest.forEach(async item => {
+            let title = item.title;
+            
+            duplicateArticles = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles` WHERE title = " + "'" + title +"';")
+            .then(res => {
+                if (res.length === 1) {
+                    assert.equal(1, res.length);
                 }
             });
-        });
+        })
+    
+        //insert each article into the array
+        //use a GROUP BY mySQL statement to identify any unique articles
+        //Delete all but one article if duplicates found
 
-        assert.equal(1, identicalArticle.length);
-        //console.log("Identical Article: " + JSON.stringify(identicalArticle[0]));
+     }) 
 
-     }) //OPPORTUNITY to use Frequency Algorithm from Udemy course for better efficiency
-
-     it("should insert only articles with unique titles", async () => {
-        
-     })
 });
