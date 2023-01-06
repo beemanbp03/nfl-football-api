@@ -103,25 +103,25 @@ describe('Check Database For Identical Article Titles and insert unique article 
         await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('Rams Are Losing It', 'www.url.com/rams-are-losing-it', '1990-09-01 00:00:00', 'asdfe.png', '');");
      });
 
-     it("should check the database for identical articles and find one identical article", () => {
-        var duplicateArticlesCount = 0;
-        var duplicateArticles = [];
-        //Loop through array of articles that were scraped and find duplicates
+     it("should check the database for identical articles and only insert unique articles", async () => {
+        //Loop through array of articles that were scraped and find duplicates, 
+        //then insert the article if it is not a duplicate
         apiFirstRequest.forEach(async item => {
             let title = item.title;
             
-            duplicateArticles = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles` WHERE title = " + "'" + title +"';")
-            .then(res => {
+            duplicateArticles = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles` WHERE title = " + "'" + title + "';")
+            .then(async res => {
                 if (res.length === 1) {
-                    assert.equal(1, res.length);
+                    
+                } else {
+                    insertStatement = await db.dbQuery("INSERT INTO `news-punt-db-test`.`articles` (title, url, pubDate, thumbnail) VALUES ('" + title + "', '" + item.url + "', '" + item.pubDate + "', '" + item.thumbnail + "');")
+                    .then(async val => {
+                        articlesAfterInsert = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
+                        assert.equal(3, articlesAfterInsert.length);
+                    })
                 }
-            });
+            })
         })
-    
-        //insert each article into the array
-        //use a GROUP BY mySQL statement to identify any unique articles
-        //Delete all but one article if duplicates found
-
      }) 
 
 });
