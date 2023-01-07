@@ -25,6 +25,22 @@ exports.dbQuery = (query, queryVar) => {
     });
 }
 
+//Insert Unique Articles Into Database's 'articles' table
+exports.insertUniqueArticlesIntoDatabase = (articlesArray) => {
+    articlesArray.forEach(async item => {
+        let title = item.title;
+        
+        duplicateArticles = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles` WHERE title = " + "'" + title + "';")
+        .then(async res => {
+            if (res.length !== 1) {
+                console.log("Inserting unique article into database...");
+                insertStatement = await db.dbQuery("INSERT INTO `news-punt-db-test`.`articles` (title, url, pubDate, thumbnail) VALUES ('" + title + "', '" + item.url + "', '" + item.pubDate + "', '" + item.thumbnail + "');");
+            }
+        })
+
+    });
+}
+
 //Local function to connect with the database (params: {test}:boolean is the test or production database being used)
 dbConnect = () => {
     

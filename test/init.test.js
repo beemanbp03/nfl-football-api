@@ -44,23 +44,10 @@ const apiSecondRequest = [
     }
 ]
 
-describe('Sum of two numbers', () => {
-    it ('Should add two numbers then return the sum"', () => {
-        x = 0;
-        y = 0;
-
-        const sumOfNumbers = (x, y) => {
-            return x+y;
-        }
-
-        assert.equal(2, sumOfNumbers(1,1), `${x} + ${y} != ${sumOfNumbers(x,y)}`);
-    })
-})
-
-
 
 //DATABASE tests
 
+// 1
 describe("Connect to the database", () => {
     beforeEach (async () => {
         await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
@@ -74,6 +61,7 @@ describe("Connect to the database", () => {
     })
 })
 
+// 2
 describe("Insert article object successfully", () => {
     beforeEach (async () => {
         await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
@@ -97,13 +85,14 @@ describe("Insert article object successfully", () => {
     })
 })
 
+// 3
 describe('Check Database For Identical Article Titles and insert unique article objects', () => {
     beforeEach (async () => {
         await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
         await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('Rams Are Losing It', 'www.url.com/rams-are-losing-it', '1990-09-01 00:00:00', 'asdfe.png', '');");
      });
 
-     it("should check the database for identical articles and only insert unique articles", async () => {
+     it("should loop through scraped articles, check database for duplicate 'title', and only insert the article if unique", async () => {
         //Loop through array of articles that were scraped and find duplicates, 
         //then insert the article if it is not a duplicate
         apiFirstRequest.forEach(async item => {
@@ -111,9 +100,7 @@ describe('Check Database For Identical Article Titles and insert unique article 
             
             duplicateArticles = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles` WHERE title = " + "'" + title + "';")
             .then(async res => {
-                if (res.length === 1) {
-                    
-                } else {
+                if (res.length !== 1) {
                     insertStatement = await db.dbQuery("INSERT INTO `news-punt-db-test`.`articles` (title, url, pubDate, thumbnail) VALUES ('" + title + "', '" + item.url + "', '" + item.pubDate + "', '" + item.thumbnail + "');")
                     .then(async val => {
                         articlesAfterInsert = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
@@ -121,6 +108,7 @@ describe('Check Database For Identical Article Titles and insert unique article 
                     })
                 }
             })
+
         })
      }) 
 
