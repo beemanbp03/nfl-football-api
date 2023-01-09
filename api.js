@@ -8,40 +8,40 @@ const app = express();
 //Sources for NFL team news
 const apiSources = [
     {division:"afc", teams:[
-        {name:"baltimore-ravens", link:"https://www.baltimoreravens.com/rss/news", abb:"bal"},
-        {name:"buffalo-bills", link:"https://www.buffalobills.com/rss/news", abb:"buf"},
-        {name:"cincinnati-bengals", link:"https://www.bengals.com/rss/news", abb:"cin"},
-        {name:"cleveland-browns", link:"https://www.clevelandbrowns.com/rss/news", abb:"cle"},
-        {name:"denver-broncos", link:"https://www.denverbroncos.com/rss/news", abb:"den"},
-        {name:"houston-texans", link:"https://www.houstontexans.com/rss/news", abb:"hou"},
-        {name:"indianapolis-colts", link:"https://www.colts.com/rss/news", abb:"ind"},
-        {name:"jacksonville-jaguars", link:"https://www.jaguars.com/rss/news", abb:"jax"},
-        {name:"kansas-city-chiefs", link:"https://www.chiefs.com/rss/news", abb:"kc"},
-        {name:"las-vegas-raiders", link:"https://www.raiders.com/rss/news", abb:"lv"},
-        {name:"los-angeles-chargers", link:"https://www.chargers.com/rss/news", abb:"lac"},
-        {name:"miami-dolphins", link:"https://www.miamidolphins.com/rss/news", abb:"mia"},
-        {name:"new-england-patriots", link:"https://www.patriots.com/rss/news", abb:"ne"},
-        {name:"new-york-jets", link:"https://www.newyorkjets.com/rss/news", abb:"nyj"},
-        {name:"pittsburgh-steelers", link:"https://www.steelers.com/rss/news", abb:"pit"},
-        {name:"tennessee-titans", link:"https://www.tennesseetitans.com/rss/news", abb:"ten"}
+        {name:"baltimore-ravens", link:"https://www.baltimoreravens.com/rss/news", abb:"bal", articles: []},
+        {name:"buffalo-bills", link:"https://www.buffalobills.com/rss/news", abb:"buf", articles: []},
+        {name:"cincinnati-bengals", link:"https://www.bengals.com/rss/news", abb:"cin", articles: []},
+        {name:"cleveland-browns", link:"https://www.clevelandbrowns.com/rss/news", abb:"cle", articles: []},
+        {name:"denver-broncos", link:"https://www.denverbroncos.com/rss/news", abb:"den", articles: []},
+        {name:"houston-texans", link:"https://www.houstontexans.com/rss/news", abb:"hou", articles: []},
+        {name:"indianapolis-colts", link:"https://www.colts.com/rss/news", abb:"ind", articles: []},
+        {name:"jacksonville-jaguars", link:"https://www.jaguars.com/rss/news", abb:"jax", articles: []},
+        {name:"kansas-city-chiefs", link:"https://www.chiefs.com/rss/news", abb:"kc", articles: []},
+        {name:"las-vegas-raiders", link:"https://www.raiders.com/rss/news", abb:"lv", articles: []},
+        {name:"los-angeles-chargers", link:"https://www.chargers.com/rss/news", abb:"lac", articles: []},
+        {name:"miami-dolphins", link:"https://www.miamidolphins.com/rss/news", abb:"mia", articles: []},
+        {name:"new-england-patriots", link:"https://www.patriots.com/rss/news", abb:"ne", articles: []},
+        {name:"new-york-jets", link:"https://www.newyorkjets.com/rss/news", abb:"nyj", articles: []},
+        {name:"pittsburgh-steelers", link:"https://www.steelers.com/rss/news", abb:"pit", articles: []},
+        {name:"tennessee-titans", link:"https://www.tennesseetitans.com/rss/news", abb:"ten", articles: []}
     ]},
     {division:"nfc", teams:[
-        {name:"arizona-cardinals", link:"https://www.azcardinals.com/rss/news", abb:"ari"},
-        {name:"atlanta-falcons", link:"https://www.atlantafalcons.com/rss/news", abb:"atl"},
-        {name:"carolina-panthers", link:"https://www.panthers.com/rss/news", abb:"car"},
-        {name:"chicago-bears", link:"https://www.chicagobears.com/rss/news", abb:"chi"},
-        {name:"dallas-cowboys", link:"https://www.dallascowboys.com/rss/news", abb:"dal"},
-        {name:"detroit-lions", link:"https://www.detroitlions.com/rss/news", abb:"det"},
-        {name:"green-bay-packers", link:"https://www.packers.com/rss/news", abb:"gb"},
-        {name:"los-angeles-rams", link:"https://www.therams.com/rss/news", abb:"lar"},
-        {name:"minnesota-vikings", link:"https://www.vikings.com/rss/news", abb:"min"},
-        {name:"new-orleans-saints", link:"https://www.neworleanssaints.com/rss/news", abb:"no"},
-        {name:"new-york-giants", link:"https://www.giants.com/rss/news", abb:"nyg"},
-        {name:"philadelphia-eagles", link:"https://www.philadelphiaeagles.com/rss/news", abb:"phi"},
-        {name:"san-francisco-49ers", link:"https://www.49ers.com/rss/news", abb:"sf"},
-        {name:"seattle-seahawks", link:"https://www.seahawks.com/rss/news", abb:"sea"},
-        {name:"tampa-bay-buccaneers", link:"https://www.buccaneers.com/rss/news", abb:"tb"},
-        {name:"washington-commanders", link:"https://www.commanders.com/rss/news", abb:"wsh"}
+        {name:"arizona-cardinals", link:"https://www.azcardinals.com/rss/news", abb:"ari", articles: []},
+        {name:"atlanta-falcons", link:"https://www.atlantafalcons.com/rss/news", abb:"atl", articles: []},
+        {name:"carolina-panthers", link:"https://www.panthers.com/rss/news", abb:"car", articles: []},
+        {name:"chicago-bears", link:"https://www.chicagobears.com/rss/news", abb:"chi", articles: []},
+        {name:"dallas-cowboys", link:"https://www.dallascowboys.com/rss/news", abb:"dal", articles: []},
+        {name:"detroit-lions", link:"https://www.detroitlions.com/rss/news", abb:"det", articles: []},
+        {name:"green-bay-packers", link:"https://www.packers.com/rss/news", abb:"gb", articles: []},
+        {name:"los-angeles-rams", link:"https://www.therams.com/rss/news", abb:"lar", articles: []},
+        {name:"minnesota-vikings", link:"https://www.vikings.com/rss/news", abb:"min", articles: []},
+        {name:"new-orleans-saints", link:"https://www.neworleanssaints.com/rss/news", abb:"no", articles: []},
+        {name:"new-york-giants", link:"https://www.giants.com/rss/news", abb:"nyg", articles: []},
+        {name:"philadelphia-eagles", link:"https://www.philadelphiaeagles.com/rss/news", abb:"phi", articles: []},
+        {name:"san-francisco-49ers", link:"https://www.49ers.com/rss/news", abb:"sf", articles: []},
+        {name:"seattle-seahawks", link:"https://www.seahawks.com/rss/news", abb:"sea", articles: []},
+        {name:"tampa-bay-buccaneers", link:"https://www.buccaneers.com/rss/news", abb:"tb", articles: []},
+        {name:"washington-commanders", link:"https://www.commanders.com/rss/news", abb:"wsh", articles: []}
     ]}
 ];
 
@@ -49,11 +49,11 @@ const apiSources = [
 //GET ALL NFL news and Divisional News from every website on server startup, then retrieve the news
 //again every 6 hours
 const allNflArticles = [];
-const divisionArticles = [];
+
 
 apiSources.forEach((item, index) => {
     console.log(item.division);
-    var divisionArray = {division: item.division, articles:[]}
+    var teamObject = {division: item.division, articles:[]}
 
     item.teams.forEach(async (team, index) => {
         await axios.get(`${team.link}`)
@@ -69,16 +69,8 @@ apiSources.forEach((item, index) => {
                 const pubDate = $(elem).children('pubDate').text();
                 const thumbnail = $(elem).children('enclosure').attr('url');
                 const author = $(elem).children('creator').text();
-                //Add article to All News Array
-                allNflArticles.push({
-                    title,
-                    author,
-                    url,
-                    pubDate,
-                    thumbnail
-                });
                 //Add article to Division Array
-                divisionArray.articles.push({
+                teamObject.articles.push({
                     title,
                     author,
                     url,
@@ -94,51 +86,54 @@ apiSources.forEach((item, index) => {
         });
         //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
     });
-    divisionArticles.push(divisionArray);
+    allNflArticles.push(teamObject);
 });
 
 setInterval(() => {
-    allNflArticles.length = 0;
-    apiSources.forEach((item, index) => {
-        item.teams.forEach(async (team, index) => {
-            await axios.get(`${item.link}`)
-            .then((response) => {
-                const html = response.data;
-                const $ = cheerio.load(html, {
-                    xmlMode: true
-                });
-        
-                $('item').each((i, elem) => {
-                    const title = $(elem).children('title').text();
-                    const url = $(elem).children('link').text();
-                    const pubDate = $(elem).children('pubDate').text();
-                    const thumbnail = $(elem).children('enclosure').attr('url');
-                    const author = $(elem).children('creator').text();
-                    allNflArticles.push({
-                        title,
-                        author,
-                        url,
-                        pubDate,
-                        thumbnail
-                    });
-                //console.log( i + " article added to allNflArticles array");
-                });
-        
-            })
-            .catch((err) => {
-            console.log(err);
+    console.log(item.division);
+    var teamObject = {division: item.division, articles:[]}
+
+    item.teams.forEach(async (team, index) => {
+        await axios.get(`${team.link}`)
+        .then((response) => {
+            const html = response.data;
+            const $ = cheerio.load(html, {
+                xmlMode: true
             });
-            //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
+    
+            $('item').each((i, elem) => {
+                const title = $(elem).children('title').text();
+                const url = $(elem).children('link').text();
+                const pubDate = $(elem).children('pubDate').text();
+                const thumbnail = $(elem).children('enclosure').attr('url');
+                const author = $(elem).children('creator').text();
+                //Add article to Division Array
+                teamObject.articles.push({
+                    title,
+                    author,
+                    url,
+                    pubDate,
+                    thumbnail
+                });
+            //console.log( i + " article added to allNflArticles array");
+            });
+    
+        })
+        .catch((err) => {
+        console.log(err);
         });
+        //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
     });
-}, 1000 * 60 * 60 * 6);
+    allNflArticles.push(teamObject);
+}, 1000 * 20);
 
 
-//$$$$$$$$$$$$$$$$ NEED TO COMBINE INTO ABOVE INTERVAL $$$$$$$$$$$$$$$$$$$$$$$$$$$
+//$$$$$$$$$$$$$$$$$$$$$ NEED TO COMBINE INTO ABOVE INTERVAL $$$$$$$$$$$$$$$$$$$$$$$$$$$
+/*
 setInterval(() => {
     divisionArticles.length = 0;
     apiSources.forEach(item => {
-        var division = {division: item.division, articles: []}
+        var division = {division: item.division, articles: []};
         item.teams.forEach(async (team, index) => {
             await axios.get(`${team.link}`)
             .then((response) => {
@@ -189,7 +184,7 @@ setInterval(() => {
         divisionArticles.push(division);
     })
 }, 1000 * 60 * 60 * 6);
-
+*/
 
 /*****************************************************************************/
 
@@ -229,35 +224,37 @@ app.get("/", (req, res) => {
 
 //ALL NFL news endpoint example: /news
 app.get(`/news`, (req, res) => {
-    //Loop through all nfl divisionArticles, convert the pubDate into a Date() object
-    for (let i = 0; i < allNflArticles.length - 1; i++) {
-        let articleDate = new Date(allNflArticles[i].pubDate);
-        allNflArticles[i].pubDate = articleDate;
-    }
+    ///1) Loop through all nfl divisionArticles, convert the pubDate into a Date() object
+    ///2) Loop through all nfl divisionArticles, convert the pubDate into a readable date
+    ///3) Then sort the array of divisionArticles by date descending before sending it to res.json
+    var sortedDivisionArticlesDesc = [];
 
-    //Then sort the array of divisionArticles by date descending before sending it to res.json
-    const sorteddivisionArticlesDesc = allNflArticles.sort(
-        (objA, objB) => Number(objB.pubDate) - Number(objA.pubDate)
-    );
+    allNflArticles.forEach(item => {
+        item.pubDate = new Date(item.pubDate);
 
-    //Loop through all nfl divisionArticles, convert the pubDate into a readable date
-    for (let i = 0; i < allNflArticles.length - 1; i++) {
-        let dateString = allNflArticles[i].pubDate.toDateString();
-        let hour = allNflArticles[i].pubDate.getHours();
-        let minute = String(allNflArticles[i].pubDate.getUTCMinutes()).padStart(2, "0");
+        let dateString = item.pubDate.toDateString();
+        let hour = item.pubDate.getHours();
+        let minute = String(item.pubDate.getUTCMinutes()).padStart(2, "0");
+
         let articleDate = dateString + " " + hour + ":" + minute;
-        
-        allNflArticles[i].pubDate = articleDate;
-    }
 
-    res.json(sorteddivisionArticlesDesc);
+        item.pubDate = articleDate;
+        
+        sortedDivisionArticlesDesc.push(item);
+    });
+
+    res.json(sortedDivisionArticlesDesc.sort((objA, objB) => Number(objB) - Number(objA)));
 });
 
 //DIVISION specific endpoints example: /news/${division}
-divisionArticles.forEach((item, index) => {
+allNflArticles.forEach((item, index) => {
     app.get(`/news/${item.division}`, (req, res) => {
         res.json(item.articles);
     });
+
+    app.get(`/news/${item.name}`, (req, res) => {
+       res.json(item.articles); 
+    })
 });
 
 //TEAM specific endpoints -> example: /news/${division}/${team}
@@ -318,6 +315,7 @@ apiSources.forEach((item, index) => {
                 console.log(err);
             })
         });
+
     })
 });
 
