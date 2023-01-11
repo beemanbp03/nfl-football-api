@@ -25,20 +25,28 @@ exports.dbQuery = (query, queryVar) => {
     });
 }
 
-//Insert Unique Articles Into Database's 'articles' table
-exports.insertUniqueArticlesIntoDatabase = (articlesArray) => {
-    articlesArray.forEach(async item => {
-        let title = item.title;
-        
-        duplicateArticles = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles` WHERE title = " + "'" + title + "';")
-        .then(async res => {
-            if (res.length !== 1) {
-                console.log("Inserting unique article into database...");
-                insertStatement = await db.dbQuery("INSERT INTO `news-punt-db-test`.`articles` (title, url, pubDate, thumbnail) VALUES ('" + title + "', '" + item.url + "', '" + item.pubDate + "', '" + item.thumbnail + "');");
-            }
-        })
+//Delete All Duplicate Articles in the Database
+exports.deleteAllDuplicateArticles = (articlesArray) => {
+    console.log("Trying to Delete Duplicates from Database");
+}
 
-    });
+exports.insertArticles = (arrayOfArticles) => {
+    return new Promise((resolve, reject) => {
+        var connection = dbConnect();
+        arrayOfArticles.forEach( item => {
+            let query = "INSERT INTO `news-punt-db-test`.`articles` (title, url, pubDate, thumbnail, author) VALUES (?,?,?,?,?);"
+            let queryVars = [item.title, item.url, item.pubDate, item.thumbnail, item.author];
+            connection.query(query, queryVars, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            })
+        });
+        
+        connection.end();
+    })
 }
 
 //Local function to connect with the database (params: {test}:boolean is the test or production database being used)
@@ -49,7 +57,8 @@ dbConnect = () => {
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         name: process.env.DB_NAME,
-        port: process.env.DB_PORT
+        port: process.env.DB_PORT,
+        charset: "utf8mb4"
     }
     
     //Create Database Connection

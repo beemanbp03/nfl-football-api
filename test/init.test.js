@@ -65,7 +65,6 @@ describe("Connect to the database", () => {
 describe("Insert article object successfully", () => {
     beforeEach (async () => {
         await db.dbQuery('TRUNCATE TABLE `news-punt-db-test`.articles');
-        await db.dbQuery("INSERT INTO `news-punt-db-test`.articles (title, url, pubDate, thumbnail, author) VALUES ('Rams Are Losing It', 'www.url.com/rams-are-losing-it', '1990-09-01 00:00:00', 'asdfe.png', '');");
      });
     
     it ("should insert a new article object into the articles table successfully", async () => {
@@ -77,11 +76,20 @@ describe("Insert article object successfully", () => {
         "'" + apiFirstRequest[0].thumbnail + "',"+
         "'" + apiFirstRequest[0].author + "');");
         
-        const selectQuery = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
-        assert.equal(2, selectQuery.length);
+        let selectQuery = await db.dbQuery("SELECT * FROM `news-punt-db-test`.`articles`;");
+        assert.equal(1, selectQuery.length);
     })
-    it ("Should insert an array of article objects into the articles table", async () => {
 
+    it ("Should insert an array of article objects into the articles table", async () => {
+        apiFirstRequest.forEach( async item => {
+            const insertQuery = await db.dbQuery("INSERT INTO `news-punt-db-test`.`articles` (title, url, pubDate, thumbnail, author)"
+            + "VALUES" +
+            "('" + item.title + "',"+
+            "'" + item.url + "',"+
+            "'" + item.pubDate + "',"+
+            "'" + item.thumbnail + "',"+
+            "'" + item.author + "');")
+            });
     })
 })
 

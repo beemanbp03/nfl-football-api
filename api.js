@@ -45,17 +45,16 @@ const apiSources = [
     ]}
 ];
 
-//******************* SERVER STARTUP / INTERVAL CALLS ***********************/
+//******************* SERVER STARTUP && INTERVAL CALLS ***********************/
 //GET ALL NFL news and Divisional News from every website on server startup, then retrieve the news
 //again every 6 hours
 const allNflArticles = [];
 
 
 apiSources.forEach((item, index) => {
-    console.log(item.division);
-    var teamObject = {division: item.division, articles:[]}
-
+    console.log("Fetching news for " + item.division);
     item.teams.forEach(async (team, index) => {
+        var teamObject = {name: team.name, division: item.division, articles:[]}
         await axios.get(`${team.link}`)
         .then((response) => {
             const html = response.data;
@@ -63,18 +62,22 @@ apiSources.forEach((item, index) => {
                 xmlMode: true
             });
     
-            $('item').each((i, elem) => {
+            $('item').each(async (i, elem) => {
                 const title = $(elem).children('title').text();
                 const url = $(elem).children('link').text();
                 const pubDate = $(elem).children('pubDate').text();
                 const thumbnail = $(elem).children('enclosure').attr('url');
                 const author = $(elem).children('creator').text();
+
+                console.log(title + "'s   ---  " + pubDate);
+                const convertedDate = new Date(pubDate).toISOString().slice(0, 19).replace('T', ' ');
+                console.log(convertedDate);
                 //Add article to Division Array
                 teamObject.articles.push({
                     title,
                     author,
                     url,
-                    pubDate,
+                    convertedDate,
                     thumbnail
                 });
             //console.log( i + " article added to allNflArticles array");
@@ -84,51 +87,53 @@ apiSources.forEach((item, index) => {
         .catch((err) => {
         console.log(err);
         });
-        //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
+        allNflArticles.push(teamObject);
+        await db.insertArticles(teamObject.articles);
     });
-    allNflArticles.push(teamObject);
+    console.log("This should be at the end")
 });
 
 setInterval(() => {
-    console.log(item.division);
-    var teamObject = {division: item.division, articles:[]}
-
-    item.teams.forEach(async (team, index) => {
-        await axios.get(`${team.link}`)
-        .then((response) => {
-            const html = response.data;
-            const $ = cheerio.load(html, {
-                xmlMode: true
-            });
+    console.log("Interval Running...");
+    apiSources.forEach((item, index) => {
+        console.log(item.division);
+        var teamObject = {division: item.division, articles:[]}
     
-            $('item').each((i, elem) => {
-                const title = $(elem).children('title').text();
-                const url = $(elem).children('link').text();
-                const pubDate = $(elem).children('pubDate').text();
-                const thumbnail = $(elem).children('enclosure').attr('url');
-                const author = $(elem).children('creator').text();
-                //Add article to Division Array
-                teamObject.articles.push({
-                    title,
-                    author,
-                    url,
-                    pubDate,
-                    thumbnail
+        item.teams.forEach(async (team, index) => {
+            await axios.get(`${team.link}`)
+            .then((response) => {
+                const html = response.data;
+                const $ = cheerio.load(html, {
+                    xmlMode: true
                 });
-            //console.log( i + " article added to allNflArticles array");
+        
+                $('item').each((i, elem) => {
+                    const title = $(elem).children('title').text();
+                    const url = $(elem).children('link').text();
+                    const pubDate = $(elem).children('pubDate').text();
+                    const thumbnail = $(elem).children('enclosure').attr('url');
+                    const author = $(elem).children('creator').text();
+                    //Add article to teamObject.articles Array
+                    teamObject.articles.push({
+                        title,
+                        author,
+                        url,
+                        pubDate,
+                        thumbnail
+                    });
+                //console.log( i + " article added to allNflArticles array");
+                });
+        
+            })
+            .catch((err) => {
+            console.log(err);
             });
-    
-        })
-        .catch((err) => {
-        console.log(err);
+            //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
         });
-        //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
+        allNflArticles.push(teamObject);
     });
-    allNflArticles.push(teamObject);
-}, 1000 * 20);
+}, 1000 * 60 * 60 * 12);
 
-
-//$$$$$$$$$$$$$$$$$$$$$ NEED TO COMBINE INTO ABOVE INTERVAL $$$$$$$$$$$$$$$$$$$$$$$$$$$
 /*
 setInterval(() => {
     divisionArticles.length = 0;
