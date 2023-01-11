@@ -131,6 +131,7 @@ setInterval(() => {
             //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
         });
         allNflArticles.push(teamObject);
+        await db.insertArticles(teamObject.articles);
     });
 }, 1000 * 60 * 60 * 12);
 
