@@ -19,6 +19,7 @@ exports.dbQuery = (query, queryVar) => {
             } else {
                 //console.log("Results inside dbController" + JSON.stringify(rows));
                 resolve(rows);
+                console.log(rows);
             }
         });
         connection.end();

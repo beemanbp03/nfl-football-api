@@ -1,8 +1,9 @@
 const PORT = 8000;
 const db = require('./controllers/dbController');
-const express = require('express');
 const axios = require('axios').default;
 const cheerio = require('cheerio');
+
+const express = require('express');
 const app = express();
 
 //Sources for NFL team news
@@ -69,9 +70,11 @@ apiSources.forEach((item, index) => {
                 const thumbnail = $(elem).children('enclosure').attr('url');
                 const author = $(elem).children('creator').text();
 
-                console.log(title + "'s   ---  " + pubDate);
                 const convertedDate = new Date(pubDate).toISOString().slice(0, 19).replace('T', ' ');
-                console.log(convertedDate);
+                //OUTPUTS
+                //console.log(convertedDate);
+                //console.log(title + "'s   ---  PUBLISHED: " + pubDate);
+
                 //Add article to Division Array
                 teamObject.articles.push({
                     title,
@@ -95,8 +98,8 @@ apiSources.forEach((item, index) => {
 
 setInterval(() => {
     console.log("Interval Running...");
-    apiSources.forEach((item, index) => {
-        console.log(item.division);
+    apiSources.forEach(async (item, index) => {
+        //console.log(item.division);
         var teamObject = {division: item.division, articles:[]}
     
         item.teams.forEach(async (team, index) => {
