@@ -1,5 +1,5 @@
 const PORT = 8000;
-const db = require('./controllers/dbController');
+//const db = require('./controllers/dbController');
 const axios = require('axios').default;
 const cheerio = require('cheerio');
 
@@ -91,7 +91,7 @@ apiSources.forEach((item, index) => {
         console.log(err);
         });
         allNflArticles.push(teamObject);
-        await db.insertArticles(teamObject.articles);
+        //await db.insertArticles(teamObject.articles);
     });
     console.log("This should be at the end")
 });
@@ -134,7 +134,7 @@ setInterval(() => {
             //console.log("END OF GET ALL NFL NEWS FOR " + team.name);
         });
         allNflArticles.push(teamObject);
-        await db.insertArticles(teamObject.articles);
+        //await db.insertArticles(teamObject.articles);
     });
 }, 1000 * 60 * 60 * 12);
 
